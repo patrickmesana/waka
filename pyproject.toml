@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "waka"
+version = "0.1.0"
+description = "Waka Python package"
+authors = [
+    {name = "Patrick Mesana"}
+]
+requires-python = ">=3.7" 
