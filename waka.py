@@ -10,7 +10,6 @@ from tqdm import tqdm
 import math
 from math import log, log2
 
-from utils import time_it, check_number, cumsum
 
 from time import sleep
 
@@ -296,7 +295,7 @@ def compute_self_waka_value_with_optional_target_with_knn(
 
     reversed_signed_aggregated_deltas = signed_aggregated_deltas[::-1]
 
-    cumm_reversed_signed_aggregated_deltas = cumsum(reversed_signed_aggregated_deltas)
+    cumm_reversed_signed_aggregated_deltas = np.cumsum(reversed_signed_aggregated_deltas)
 
     cumm_aggregated_deltas = [abs(d) for d in cumm_reversed_signed_aggregated_deltas]
 
@@ -377,7 +376,7 @@ def compute_unormalized_average_waka_values(
         for j in range(nbr_of_considered_points + 1)
     }
 
-    # @time_it
+
     def t_iteration(t_label, t_sorted_labels, t_sorted_indices):
         """
         Calculate WAKA values for a single test point.
@@ -544,7 +543,7 @@ def compute_unormalized_average_waka_values(
                         
                         # Handle special case for full strategy
                         if strat_params == "full":
-                            cumm_signed_aggregated_deltas = cumsum(signed_aggregated_deltas)
+                            cumm_signed_aggregated_deltas = np.cumsum(signed_aggregated_deltas)
                             cumm_aggregated_deltas = [abs(l) for l in cumm_signed_aggregated_deltas]
                             wasserstein_aggregated = sum(cumm_aggregated_deltas)
                             
@@ -554,13 +553,13 @@ def compute_unormalized_average_waka_values(
                                 tau_idx = 0
                             else:
                                 tau_idx = math.floor((1 - Tau) * K) + 1
-                            cumm_signed_aggregated_deltas = cumsum(signed_aggregated_deltas[::-1])
+                            cumm_signed_aggregated_deltas = np.cumsum(signed_aggregated_deltas[::-1])
                             cumm_aggregated_deltas = [abs(l) for l in cumm_signed_aggregated_deltas]
                             target_cumm_aggregated_deltas2 = cumm_aggregated_deltas[:tau_idx]
                             wasserstein_aggregated = sum(target_cumm_aggregated_deltas2)
                             
                         elif strat_params == "acquisition-with-penalty":
-                            cumm_signed_aggregated_deltas = cumsum(signed_aggregated_deltas[::-1])
+                            cumm_signed_aggregated_deltas = np.cumsum(signed_aggregated_deltas[::-1])
                             cumm_aggregated_deltas = [abs(l) for l in cumm_signed_aggregated_deltas]
                             wasserstein_aggregated = sum(cumm_aggregated_deltas)
                             
@@ -575,14 +574,14 @@ def compute_unormalized_average_waka_values(
                         
                         # Handle special case for full strategy
                         if strat_params == "full":
-                            cumm_signed_aggregated_deltas = cumsum(signed_aggregated_deltas)
+                            cumm_signed_aggregated_deltas = np.cumsum(signed_aggregated_deltas)
                             cumm_aggregated_deltas = [abs(l) for l in cumm_signed_aggregated_deltas]
                             wasserstein_aggregated = -sum(cumm_aggregated_deltas)
                      
                             
                         # Handle penalty-based strategies
                         elif strat_params == "removal-with-penalty":
-                            cumm_signed_aggregated_deltas = cumsum(signed_aggregated_deltas)
+                            cumm_signed_aggregated_deltas = np.cumsum(signed_aggregated_deltas)
                             cumm_aggregated_deltas = [abs(l) for l in cumm_signed_aggregated_deltas]
                             wasserstein_aggregated = -sum(cumm_aggregated_deltas)
                             
@@ -591,7 +590,7 @@ def compute_unormalized_average_waka_values(
                                 tau_idx = 0
                             else:
                                 tau_idx = math.floor(Tau * K) + 1
-                            cumm_signed_aggregated_deltas = cumsum(signed_aggregated_deltas)
+                            cumm_signed_aggregated_deltas = np.cumsum(signed_aggregated_deltas)
                             cumm_aggregated_deltas = [abs(l) for l in cumm_signed_aggregated_deltas]
                             target_cumm_aggregated_deltas2 = cumm_aggregated_deltas[:tau_idx]
                             wasserstein_aggregated = -sum(target_cumm_aggregated_deltas2)
@@ -693,7 +692,7 @@ def compute_self_unormalized_average_waka_values(
         for j in range(nbr_of_considered_points + 1)
     }
 
-    # @time_it
+
     def t_iteration(data_point, data_point_idx, data_point_label):
         """
         Calculate WAKA values for a single training point.
@@ -833,7 +832,7 @@ def compute_self_unormalized_average_waka_values(
                     )
                 ]
 
-                cumm_signed_aggregated_deltas = cumsum(signed_aggregated_deltas)
+                cumm_signed_aggregated_deltas = np.cumsum(signed_aggregated_deltas)
 
                 cumm_aggregated_deltas = [abs(l) for l in cumm_signed_aggregated_deltas]
                 # This operation might trigger a RuntimeWarning for overflow

@@ -10,6 +10,8 @@ import numpy as np
 from tqdm import tqdm
 from rayPlus import parallel_loop
 
+from dataclasses import dataclass
+
 
 @dataclass
 class UtilityResult:

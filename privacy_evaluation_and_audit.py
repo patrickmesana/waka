@@ -5,8 +5,8 @@ from waka import (
     compute_self_unormalized_average_waka_values,
     compute_self_unormalized_average_waka_values_recomputable,
 )
-import knn_valuation
-import utils
+import knn_shapley_valuation as knn_valuation
+
 from lira_attack import *
 
 import os
@@ -27,7 +27,7 @@ from sklearn.metrics import f1_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 
-import data_loader
+
 
 from scipy.spatial.distance import cdist
 
