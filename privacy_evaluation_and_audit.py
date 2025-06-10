@@ -660,6 +660,8 @@ def run_multiple_games_and_plot(
     ray_already_init=False,
     target_model_fct=None,
     loss_fct=None,
+    load_from_file=False,
+    return_analysis=False,
 ):
     """
     Runs multiple security games and generates evaluation plots.
@@ -707,23 +709,28 @@ def run_multiple_games_and_plot(
     if not os.path.exists(plot_folder):
         os.makedirs(plot_folder)
 
-    # list of (scores, labels, indices) for each game
-    all_scores = run_multiple_games(
-        df_data,
-        K,
-        attacker_predict,
-        number_of_games,
-        seed_list,
-        membership_ratio,
-        feature_names=feature_names,
-        label_name=label_name,
-        ray_parallelization=ray_parallelization,
-        batch=batch,
-        distribution_data=distribution_data,
-        ray_already_init=ray_already_init,
-        target_model_fct=target_model_fct,
-        loss_fct=loss_fct,
-    )
+    scores_file = f"{plot_folder}/{attack_name}_scores.pkl"
+    if os.path.exists(scores_file) and load_from_file:
+        with open(scores_file, "rb") as f:
+            all_scores = pickle.load(f)
+    else:
+        # list of (scores, labels, indices) for each game
+        all_scores = run_multiple_games(
+            df_data,
+            K,
+            attacker_predict,
+            number_of_games,
+            seed_list,
+            membership_ratio,
+            feature_names=feature_names,
+            label_name=label_name,
+            ray_parallelization=ray_parallelization,
+            batch=batch,
+            distribution_data=distribution_data,
+            ray_already_init=ray_already_init,
+            target_model_fct=target_model_fct,
+            loss_fct=loss_fct,
+        )
 
     # pickle all scores
     with open(f"{plot_folder}/{attack_name}_scores.pkl", "wb") as f:
@@ -769,7 +776,19 @@ def run_multiple_games_and_plot(
     # Analyze and plot AUC convergence
     # analyze_auc_convergence(seed_list, all_scores, plot_folder, attack_name)
 
-    return all_scores
+    if return_analysis:
+        return {
+            "all_scores": all_scores,
+            "all_fpr": all_fpr,
+            "mean_tpr": mean_tpr,
+            "upper_tpr": upper_tpr,
+            "lower_tpr": lower_tpr,
+            "mean_auc": mean_auc,
+            "std_auc": std_auc,
+            "tpr_at_fpr": tpr_at_fpr,
+        }
+    else:
+        return all_scores
 
 
 def scores_to_outlier_indicators(scores):
