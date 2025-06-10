@@ -15,7 +15,7 @@ This artifact contains implementations of membership inference attacks (MIA) whi
 
 The artifact implements privacy attack methods that could potentially be misused if applied to real-world systems without proper authorization. Users should only apply these methods to their own data or with explicit permission for security auditing purposes.
 
-## Basic Requirements (Only for Functional and Reproduced badges)
+## Basic Requirements 
 
 ### Hardware Requirements
 - CPU: Multi-core processor recommended for parallel computation (4+ cores)
